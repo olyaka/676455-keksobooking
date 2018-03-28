@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Olga Valyasina](https://up.htmlacademy.ru/javascript/13/user/676455).
-* Наставник: `Неизвестно`.
+* Наставник: [Арсений Ильяшов].
 
 ---
 
