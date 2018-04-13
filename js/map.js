@@ -7,6 +7,8 @@ var CHECKIN = ['12:00', '13:00', '14:00'];
 var CHECKOUT = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
 
 var getRandomValue = function (min, max, round) {
   var random = Math.random() * (max - min) + min;
@@ -45,8 +47,8 @@ var randomTitle = randomiseArray(TITLES, 8);
 var notices = [];
 
 for (var i = 0; i < NUMBER_OF_NOTICES; i++) {
-  var x = getRandomValue(300, 900);
-  var y = getRandomValue(150, 500);
+  var x = getRandomValue(300, 900, true);
+  var y = getRandomValue(150, 500, true);
 
   notices[i] = {
     author: {
@@ -72,15 +74,13 @@ for (var i = 0; i < NUMBER_OF_NOTICES; i++) {
   };
 }
 
-document.querySelector('.map').classList.remove('map--faded');
-
 var similarPinsElement = document.querySelector('.map__pins');
 var similarPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
 var renderPin = function (notice) {
   var pinElement = similarPinTemplate.cloneNode(true);
-  var pinX = notice.location.x - 25;
-  var pinY = notice.location.y - 70;
+  var pinX = notice.location.x - PIN_WIDTH / 2;
+  var pinY = notice.location.y - PIN_HEIGHT;
   pinElement.style = 'left: ' + pinX + 'px; top: ' + pinY + 'px;';
   pinElement.querySelector('.map__pin img').src = notice.author.avatar;
   pinElement.querySelector('.map__pin img').alt = notice.offer.title;
@@ -152,3 +152,52 @@ var renderCard = function (notice) {
 var cardFragment = document.createDocumentFragment();
 cardFragment.appendChild(renderCard(notices[0]));
 similarCardsElement.appendChild(cardFragment);
+
+var formFieldsets = document.querySelectorAll('fieldset');
+for (i = 0; i < formFieldsets.length; i++) {
+  formFieldsets[i].setAttribute('disabled', 'disabled');
+}
+
+var activatePage = function () {
+  document.querySelector('.map').classList.remove('map--faded');
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+  for (i = 0; i < formFieldsets.length; i++) {
+    formFieldsets[i].removeAttribute('disabled');
+  }
+};
+
+var mainMapPin = document.querySelector('.map__pin--main');
+
+var setAddress = function () {
+  var rect = mainMapPin.getBoundingClientRect();
+  var addressX = rect.left + PIN_WIDTH / 2;
+  var addressY = rect.top + PIN_HEIGHT;
+  document.querySelector('#address').value = addressX + ', ' + addressY;
+};
+
+setAddress();
+
+var onMainMapPinMouseUp = function () {
+  activatePage();
+  setAddress();
+};
+
+mainMapPin.addEventListener('mouseup', onMainMapPinMouseUp);
+
+var onMapPinClick = function (evt) {
+  var mapPinX = evt.currentTarget.getBoundingClientRect().left + PIN_WIDTH / 2;
+  var mapPinY = evt.currentTarget.getBoundingClientRect().top + PIN_HEIGHT;
+  for (i = 0; i < notices.length; i++) {
+    if ((notices[i].location.x === mapPinX) & (notices[i].location.y === mapPinY)) {
+      cardFragment.appendChild(renderCard(notices[i]));
+      similarCardsElement.appendChild(cardFragment);
+      break;
+    }
+  }
+};
+
+// similarPinsElement.addEventListener('click', onMapPinClick);
+
+for (i = 0; i < similarPinsElement.querySelectorAll('.map__pin').length; i++) {
+  similarPinsElement.querySelectorAll('.map__pin')[i].addEventListener('click', onMapPinClick);
+}
