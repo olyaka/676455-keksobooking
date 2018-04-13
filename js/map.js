@@ -27,15 +27,19 @@ var ifContains = function (array, element) {
 var randomiseArray = function (array, length) {
   var randomArray = [];
   if (!length) {
-    length = getRandomValue(1, array.length, true);
+    length = getRandomValue(0, array.length, true);
   }
 
-  var i = 0;
-  while (i < length) {
-    var currentElement = array[getRandomValue(0, length - 1, true)];
-    if (!ifContains(randomArray, currentElement)) {
-      randomArray[i] = currentElement;
-      i++;
+  if (length === 0) {
+    randomArray = [];
+  } else {
+    var i = 0;
+    while (i < length) {
+      var currentElement = array[getRandomValue(0, length - 1, true)];
+      if (!ifContains(randomArray, currentElement)) {
+        randomArray[i] = currentElement;
+        i++;
+      }
     }
   }
   return randomArray;
@@ -87,11 +91,13 @@ var renderPin = function (notice) {
   return pinElement;
 };
 
-var pinFragment = document.createDocumentFragment();
-for (i = 0; i < notices.length; i++) {
-  pinFragment.appendChild(renderPin(notices[i]));
-}
-similarPinsElement.appendChild(pinFragment);
+var renderAllPins = function () {
+  var pinFragment = document.createDocumentFragment();
+  for (i = 0; i < notices.length; i++) {
+    pinFragment.appendChild(renderPin(notices[i]));
+  }
+  similarPinsElement.appendChild(pinFragment);
+};
 
 var similarCardTemplate = document.querySelector('template').content.querySelector('.map__card');
 var similarCardsElement = document.querySelector('.map');
@@ -123,6 +129,10 @@ var renderCard = function (notice) {
     cardTemplate.querySelector('.popup__features').removeChild(cardTemplate.querySelector('.popup__feature'));
   }
 
+  if (notice.offer.features.length === 0) {
+    cardTemplate.querySelector('.popup__features').classList.add('hidden');
+  }
+
   for (i = 0; i < notice.offer.features.length; i++) {
     var featureElement = featureElementTemplate.cloneNode(true);
     featureElement.classList.add('popup__feature');
@@ -149,9 +159,6 @@ var renderCard = function (notice) {
   return cardTemplate;
 };
 
-var cardFragment = document.createDocumentFragment();
-cardFragment.appendChild(renderCard(notices[0]));
-similarCardsElement.appendChild(cardFragment);
 
 var formFieldsets = document.querySelectorAll('fieldset');
 for (i = 0; i < formFieldsets.length; i++) {
@@ -179,24 +186,31 @@ setAddress();
 var onMainMapPinMouseUp = function () {
   activatePage();
   setAddress();
+  renderAllPins();
+
+  for (i = 0; i < similarPinsElement.querySelectorAll('.map__pin').length; i++) {
+    similarPinsElement.querySelectorAll('.map__pin')[i].addEventListener('click', onMapPinClick);
+  }
 };
 
 mainMapPin.addEventListener('mouseup', onMainMapPinMouseUp);
 
 var onMapPinClick = function (evt) {
+  var currentCard = document.querySelector('.map__card');
+  if (currentCard) {
+    similarCardsElement.removeChild(document.querySelector('.map__card'));
+  }
   var mapPinX = parseInt(evt.currentTarget.style.left, 10) + PIN_WIDTH / 2;
   var mapPinY = parseInt(evt.currentTarget.style.top, 10) + PIN_HEIGHT;
   for (i = 0; i < notices.length; i++) {
     if ((notices[i].location.x === mapPinX) & (notices[i].location.y === mapPinY)) {
+      var cardFragment = document.createDocumentFragment();
       cardFragment.appendChild(renderCard(notices[i]));
       similarCardsElement.appendChild(cardFragment);
+      document.querySelector('.popup__close').addEventListener('click', function () {
+        similarCardsElement.removeChild(document.querySelector('.map__card'));
+      });
       break;
     }
   }
 };
-
-// similarPinsElement.addEventListener('click', onMapPinClick);
-
-for (i = 0; i < similarPinsElement.querySelectorAll('.map__pin').length; i++) {
-  similarPinsElement.querySelectorAll('.map__pin')[i].addEventListener('click', onMapPinClick);
-}
