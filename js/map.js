@@ -248,10 +248,19 @@ selectedCheckOut.addEventListener('change', function (evt) {
 var selectedRoomNumber = document.querySelector('#room_number');
 var selectedCapacity = document.querySelector('#capacity');
 
-selectedRoomNumber.addEventListener('change', function (evt) {
-  selectedCapacity.value = evt.currentTarget.value;
-});
+var onRoomOrGuestNumberChange = function () {
+  var roomNumber = parseInt(selectedRoomNumber.value, 10);
+  var guestNumber = parseInt(selectedCapacity.value, 10);
+  if (roomNumber < guestNumber) {
+    selectedCapacity.setCustomValidity('Количество комнат не соответствует числу гостей');
+  } else if (roomNumber === 100 & guestNumber !== 0) {
+    selectedCapacity.setCustomValidity('Так много комнат не для гостей');
+  } else {
+    selectedCapacity.setCustomValidity('');
+  }
+};
 
-selectedCapacity.addEventListener('change', function (evt) {
-  selectedRoomNumber.value = evt.currentTarget.value;
-});
+selectedRoomNumber.addEventListener('change', onRoomOrGuestNumberChange);
+
+selectedCapacity.addEventListener('change', onRoomOrGuestNumberChange);
+
