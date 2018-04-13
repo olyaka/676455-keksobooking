@@ -169,9 +169,8 @@ var activatePage = function () {
 var mainMapPin = document.querySelector('.map__pin--main');
 
 var setAddress = function () {
-  var rect = mainMapPin.getBoundingClientRect();
-  var addressX = rect.left + PIN_WIDTH / 2;
-  var addressY = rect.top + PIN_HEIGHT;
+  var addressX = parseInt(mainMapPin.style.left, 10) + PIN_WIDTH / 2;
+  var addressY = parseInt(mainMapPin.style.top, 10) + PIN_HEIGHT;
   document.querySelector('#address').value = addressX + ', ' + addressY;
 };
 
@@ -185,8 +184,8 @@ var onMainMapPinMouseUp = function () {
 mainMapPin.addEventListener('mouseup', onMainMapPinMouseUp);
 
 var onMapPinClick = function (evt) {
-  var mapPinX = evt.currentTarget.getBoundingClientRect().left + PIN_WIDTH / 2;
-  var mapPinY = evt.currentTarget.getBoundingClientRect().top + PIN_HEIGHT;
+  var mapPinX = parseInt(evt.currentTarget.style.left, 10) + PIN_WIDTH / 2;
+  var mapPinY = parseInt(evt.currentTarget.style.top, 10) + PIN_HEIGHT;
   for (i = 0; i < notices.length; i++) {
     if ((notices[i].location.x === mapPinX) & (notices[i].location.y === mapPinY)) {
       cardFragment.appendChild(renderCard(notices[i]));
