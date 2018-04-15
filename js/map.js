@@ -191,6 +191,7 @@ var onMainMapPinMouseUp = function () {
   for (i = 0; i < similarPinsElement.querySelectorAll('.map__pin').length; i++) {
     similarPinsElement.querySelectorAll('.map__pin')[i].addEventListener('click', onMapPinClick);
   }
+  mainMapPin.removeEventListener('mouseup', onMainMapPinMouseUp);
 };
 
 mainMapPin.addEventListener('mouseup', onMainMapPinMouseUp);
@@ -264,3 +265,46 @@ selectedRoomNumber.addEventListener('change', onRoomOrGuestNumberChange);
 
 selectedCapacity.addEventListener('change', onRoomOrGuestNumberChange);
 
+mainMapPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    var newX = mainMapPin.offsetLeft - shift.x;
+    var newY = mainMapPin.offsetTop - shift.y;
+
+    if (newX > 0 && newX + PIN_WIDTH < document.querySelector('.map').offsetWidth && newY > 0 && newY + PIN_HEIGHT < document.querySelector('.map').offsetHeight) {
+      mainMapPin.style.top = newY + 'px';
+      mainMapPin.style.left = newX + 'px';
+    }
+
+
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    setAddress();
+    
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
