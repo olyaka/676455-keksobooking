@@ -50,5 +50,17 @@
 
   selectedCapacity.addEventListener('change', onRoomOrGuestNumberChange);
 
+  var form = document.querySelector('.ad-form');
+  form.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(form), function () {
+      form.reset();
+      document.querySelector('.success').classList.remove('hidden');
+      document.addEventListener('click', function () {
+        document.querySelector('.success').classList.add('hidden');
+      });
+    }, window.util.onError);
+    evt.preventDefault();
+  });
+
 })();
 

@@ -4,7 +4,7 @@
   var similarPinsElement = document.querySelector('.map__pins');
   var mainMapPin = document.querySelector('.map__pin--main');
   var similarCardsElement = document.querySelector('.map');
-  var notices = window.notices.getNotice();
+  // var notices = window.notices.getNotice;
 
   window.util.setAddress(mainMapPin);
 
@@ -32,6 +32,15 @@
       }
     }
   };
+  var notices = [];
+
+  var onLoad = function (serverData) {
+    notices = serverData;
+
+    mainMapPin.addEventListener('mouseup', onMainMapPinMouseUp);
+  };
+
+  window.backend.load(onLoad, window.util.onError);
 
   var onMainMapPinMouseUp = function () {
     window.util.activatePage(formFieldsets);
@@ -44,7 +53,7 @@
     mainMapPin.removeEventListener('mouseup', onMainMapPinMouseUp);
   };
 
-  mainMapPin.addEventListener('mouseup', onMainMapPinMouseUp);
+  // mainMapPin.addEventListener('mouseup', onMainMapPinMouseUp);
 
   mainMapPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
