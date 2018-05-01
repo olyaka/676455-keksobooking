@@ -4,6 +4,7 @@
 window.pins = (function () {
   var similarPinsElement = document.querySelector('.map__pins');
   var similarPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+  var NUMBER_OF_PINS = 5;
 
   var renderPin = function (notice) {
     var pinElement = similarPinTemplate.cloneNode(true);
@@ -18,7 +19,8 @@ window.pins = (function () {
   return {
     renderAllPins: function (notices) {
       var pinFragment = document.createDocumentFragment();
-      for (var i = 0; i < notices.length; i++) {
+      var displayedPins = notices.length < NUMBER_OF_PINS ? notices.length : NUMBER_OF_PINS;
+      for (var i = 0; i < displayedPins; i++) {
         pinFragment.appendChild(renderPin(notices[i]));
       }
       similarPinsElement.appendChild(pinFragment);
