@@ -4,7 +4,6 @@
   var similarPinsElement = document.querySelector('.map__pins');
   var mainMapPin = document.querySelector('.map__pin--main');
   var similarCardsElement = document.querySelector('.map');
-  // var notices = window.notices.getNotice;
 
   window.util.setAddress(mainMapPin);
 
@@ -152,8 +151,6 @@
     }
     mainMapPin.removeEventListener('mouseup', onMainMapPinMouseUp);
   };
-
-  // mainMapPin.addEventListener('mouseup', onMainMapPinMouseUp);
 
   mainMapPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();

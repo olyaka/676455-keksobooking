@@ -1,11 +1,6 @@
 'use strict';
 
 (function () {
-  // var housingType = document.querySelector('#housing-type').options[document.querySelector('#housing-type').selectedIndex];
-  // var housingPrice = document.querySelector('#housing-price').options[document.querySelector('#housing-price').selectedIndex];
-  // var housingRooms = document.querySelector('#housing-rooms').options[document.querySelector('#housing-rooms').selectedIndex];
-  // var housingGuests = document.querySelector('#housing-guests').options[document.querySelector('#housing-guests').selectedIndex];
-
   var filter = {
     onHousingTypeChange: function () {},
     onHousingPriceChange: function () {},

@@ -1,5 +1,4 @@
 'use strict';
-// renderPin
 
 window.pins = (function () {
   var similarPinsElement = document.querySelector('.map__pins');
