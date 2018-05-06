@@ -1,11 +1,10 @@
 'use strict';
 
-window.util = (function () {
-
-
-  return {
+(function () {
+  window.util = {
     PIN_WIDTH: 50,
     PIN_HEIGHT: 70,
+    ESC_KEYCODE: 27,
 
     setAddress: function (mainMapPin) {
       var addressX = parseInt(mainMapPin.style.left, 10) + window.util.PIN_WIDTH / 2;
@@ -71,6 +70,18 @@ window.util = (function () {
       document.addEventListener('click', function () {
         node.remove();
       });
+    },
+
+    onEscPress: function (evt) {
+      if (evt.keyCode === window.util.ESC_KEYCODE) {
+        window.util.closeCard();
+      }
+    },
+
+    closeCard: function () {
+      var similarCardsElement = document.querySelector('.map');
+      similarCardsElement.removeChild(document.querySelector('.map__card'));
+      document.removeEventListener('keydown', window.util.onEscPress);
     }
   };
 })();

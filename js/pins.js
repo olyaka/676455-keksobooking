@@ -1,6 +1,6 @@
 'use strict';
 
-window.pins = (function () {
+(function () {
   var similarPinsElement = document.querySelector('.map__pins');
   var similarPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
   var NUMBER_OF_PINS = 5;
@@ -15,7 +15,7 @@ window.pins = (function () {
     return pinElement;
   };
 
-  return {
+  window.pins = {
     renderAllPins: function (notices) {
       var pinFragment = document.createDocumentFragment();
       var displayedPins = notices.length < NUMBER_OF_PINS ? notices.length : NUMBER_OF_PINS;

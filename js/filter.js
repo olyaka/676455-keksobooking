@@ -9,36 +9,41 @@
     onHouseingFeaturesChange: function () {}
   };
 
-  document.querySelector('#housing-type').addEventListener('change', function () {
-    var type = document.querySelector('#housing-type').options[document.querySelector('#housing-type').selectedIndex].value;
+  var onFilterChange = function (option, changeHandler) {
+    var type;
 
-    filter.onHousingTypeChange(type);
+    if (option === '#housing-features') {
+      type = (Array.from(document.querySelectorAll('.map__checkbox:checked'))).map(function (feature) {
+        return feature.value;
+      });
+    } else {
+      type = document.querySelector(option).options[document.querySelector(option).selectedIndex].value;
+    }
+
+    changeHandler(type);
+    if (document.querySelector('.map__card')) {
+      window.util.closeCard();
+    }
+  };
+
+  document.querySelector('#housing-type').addEventListener('change', function () {
+    onFilterChange('#housing-type', filter.onHousingTypeChange);
   });
 
   document.querySelector('#housing-price').addEventListener('change', function () {
-    var price = document.querySelector('#housing-price').options[document.querySelector('#housing-price').selectedIndex].value;
-
-    filter.onHousingPriceChange(price);
+    onFilterChange('#housing-price', filter.onHousingPriceChange);
   });
 
   document.querySelector('#housing-rooms').addEventListener('change', function () {
-    var rooms = document.querySelector('#housing-rooms').options[document.querySelector('#housing-rooms').selectedIndex].value;
-
-    filter.onHousingRoomsChange(rooms);
+    onFilterChange('#housing-rooms', filter.onHousingRoomsChange);
   });
 
   document.querySelector('#housing-guests').addEventListener('change', function () {
-    var guests = document.querySelector('#housing-guests').options[document.querySelector('#housing-guests').selectedIndex].value;
-
-    filter.onHousingGuestsChange(guests);
+    onFilterChange('#housing-guests', filter.onHousingGuestsChange);
   });
 
   document.querySelector('#housing-features').addEventListener('change', function () {
-    var features = (Array.from(document.querySelectorAll('.map__checkbox:checked'))).map(function (feature) {
-      return feature.value;
-    });
-
-    filter.onHouseingFeaturesChange(features);
+    onFilterChange('#housing-features', filter.onHouseingFeaturesChange);
   });
 
   window.filter = filter;

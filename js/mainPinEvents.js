@@ -4,6 +4,8 @@
   var similarPinsElement = document.querySelector('.map__pins');
   var mainMapPin = document.querySelector('.map__pin--main');
   var similarCardsElement = document.querySelector('.map');
+  var LOWER_PRICE_THRESHOLD = 10000;
+  var UPPER_PRICE_THRESHOLD = 50000;
 
   window.util.setAddress(mainMapPin);
 
@@ -19,18 +21,22 @@
     }
     var mapPinX = parseInt(evt.currentTarget.style.left, 10) + window.util.PIN_WIDTH / 2;
     var mapPinY = parseInt(evt.currentTarget.style.top, 10) + window.util.PIN_HEIGHT;
-    for (i = 0; i < notices.length; i++) {
-      if ((notices[i].location.x === mapPinX) & (notices[i].location.y === mapPinY)) {
+
+    notices.forEach(function (notice) {
+      if ((notice.location.x === mapPinX) & (notice.location.y === mapPinY)) {
         var cardFragment = document.createDocumentFragment();
-        cardFragment.appendChild(window.card.renderCard(notices[i]));
+        cardFragment.appendChild(window.card.renderCard(notice));
         similarCardsElement.appendChild(cardFragment);
+
         document.querySelector('.popup__close').addEventListener('click', function () {
-          similarCardsElement.removeChild(document.querySelector('.map__card'));
+          window.util.closeCard();
         });
-        break;
+
+        document.addEventListener('keydown', window.util.onEscPress);
       }
-    }
+    });
   };
+
   var notices = [];
 
   var housingType = 'any';
@@ -41,13 +47,13 @@
 
   var priceRange = function (price) {
     var range;
-    if (price > 10000 && price < 50000) {
+    if (price > LOWER_PRICE_THRESHOLD && price < UPPER_PRICE_THRESHOLD) {
       range = 'middle';
     }
-    if (price < 10000) {
+    if (price < LOWER_PRICE_THRESHOLD) {
       range = 'low';
     }
-    if (price > 50000) {
+    if (price > UPPER_PRICE_THRESHOLD) {
       range = 'high';
     }
     return range;
@@ -55,9 +61,10 @@
 
   var compareFeatures = function (noticeFeatures, filterFeatures) {
     var isIncludeAll = true;
-    for (i = 0; i < filterFeatures.length; i++) {
-      isIncludeAll = isIncludeAll && noticeFeatures.includes(filterFeatures[i]);
-    }
+    filterFeatures.forEach(function (feature) {
+      isIncludeAll = isIncludeAll && noticeFeatures.includes(feature);
+    });
+
     return isIncludeAll;
   };
 

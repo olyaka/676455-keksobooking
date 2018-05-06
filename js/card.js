@@ -1,8 +1,7 @@
 'use strict';
 
-window.card = (function () {
-
-  return {
+(function () {
+  window.card = {
     renderCard: function (notice) {
       var similarCardTemplate = document.querySelector('template').content.querySelector('.map__card');
 
@@ -60,7 +59,7 @@ window.card = (function () {
       cardTemplate.querySelector('.popup__photos').appendChild(photoFragment);
 
       return cardTemplate;
-    },
+    }
   };
 })();
 

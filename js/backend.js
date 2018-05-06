@@ -1,7 +1,7 @@
 'use strict';
 
-window.backend = (function () {
-  return {
+(function () {
+  window.backend = {
     load: function (onLoad, onError) {
       var URL = 'https://js.dump.academy/keksobooking/data';
 

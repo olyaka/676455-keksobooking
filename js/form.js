@@ -3,20 +3,28 @@
 (function () {
   var selectedTypeElement = document.querySelector('#type');
   var inputPrice = document.querySelector('#price');
+  var BUNGALO_MIN_PRICE = 0;
+  var FLAT_MIN_PRICE = 1000;
+  var HOUSE_MIN_PRICE = 5000;
+  var PALACE_MIN_PRICE = 10000;
+  var LARGE_NUMBER_OF_ROOMS = 100;
+  var NO_GUESTS = 0;
+  var ROOMS_GUESTS_VALIDATION_MESSAGE = 'Количество комнат не соответствует числу гостей';
+  var TOO_MANY_ROOMS = 'Так много комнат не для гостей';
 
   selectedTypeElement.addEventListener('change', function (evt) {
     if (evt.currentTarget.value === 'bungalo') {
-      inputPrice.placeholder = '0';
-      inputPrice.min = 0;
+      inputPrice.placeholder = BUNGALO_MIN_PRICE;
+      inputPrice.min = BUNGALO_MIN_PRICE;
     } else if (evt.currentTarget.value === 'flat') {
-      inputPrice.placeholder = '1000';
-      inputPrice.min = 1000;
+      inputPrice.placeholder = FLAT_MIN_PRICE;
+      inputPrice.min = FLAT_MIN_PRICE;
     } else if (evt.currentTarget.value === 'house') {
-      inputPrice.placeholder = '5000';
-      inputPrice.min = 5000;
+      inputPrice.placeholder = HOUSE_MIN_PRICE;
+      inputPrice.min = HOUSE_MIN_PRICE;
     } else if (evt.currentTarget.value === 'palace') {
-      inputPrice.placeholder = '10000';
-      inputPrice.min = 10000;
+      inputPrice.placeholder = PALACE_MIN_PRICE;
+      inputPrice.min = PALACE_MIN_PRICE;
     }
   });
 
@@ -38,9 +46,9 @@
     var roomNumber = parseInt(selectedRoomNumber.value, 10);
     var guestNumber = parseInt(selectedCapacity.value, 10);
     if (roomNumber < guestNumber) {
-      selectedCapacity.setCustomValidity('Количество комнат не соответствует числу гостей');
-    } else if (roomNumber === 100 & guestNumber !== 0) {
-      selectedCapacity.setCustomValidity('Так много комнат не для гостей');
+      selectedCapacity.setCustomValidity(ROOMS_GUESTS_VALIDATION_MESSAGE);
+    } else if (roomNumber === LARGE_NUMBER_OF_ROOMS & guestNumber !== NO_GUESTS) {
+      selectedCapacity.setCustomValidity(TOO_MANY_ROOMS);
     } else {
       selectedCapacity.setCustomValidity('');
     }
@@ -50,10 +58,13 @@
 
   selectedCapacity.addEventListener('change', onRoomOrGuestNumberChange);
 
+  var mainMapPin = document.querySelector('.map__pin--main');
+
   var form = document.querySelector('.ad-form');
   form.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(form), function () {
       form.reset();
+      window.util.setAddress(mainMapPin);
       document.querySelector('.success').classList.remove('hidden');
       document.addEventListener('click', function () {
         document.querySelector('.success').classList.add('hidden');
@@ -61,6 +72,5 @@
     }, window.util.onError);
     evt.preventDefault();
   });
-
 })();
 

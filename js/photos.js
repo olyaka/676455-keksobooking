@@ -2,6 +2,8 @@
 
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var IMAGE_WIDTH = 70;
+  var IMAGE_HEIGHT = 70;
 
   var fileChooser = document.querySelector('.ad-form__input');
   var adPhoto = document.querySelector('.ad-form__photo');
@@ -10,10 +12,11 @@
   var createImg = function (reader, photo) {
     var img = document.createElement('img');
     img.src = reader.result;
-    img.width = 70;
-    img.heigth = 70;
+    img.width = IMAGE_WIDTH;
+    img.heigth = IMAGE_HEIGHT;
 
     photo.appendChild(img);
+
 
     return photo;
   };
